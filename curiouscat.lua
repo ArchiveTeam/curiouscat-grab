@@ -127,7 +127,7 @@ allowed = function(url, parenturl)
     tested[s] = tested[s] + 1
   end
 
-  if string.match(url, "^https?://curiouscat%.qa/api/") -- Do not allow the initial pages, as they are only given in the WBM params
+  if string.match(url, "^https?://curiouscat%.qa/api/") -- Do not allow the initial pages, instead only let them in through the wget args
     or string.match(url, "^https?://curiouscat%.qa/[^/]+/post/[0-9]+$")
     or string.match(url, "^https?://m%.curiouscat%.qa/")
     or string.match(url, "^https://media%.tenor%.com/images/") then
