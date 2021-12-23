@@ -59,7 +59,7 @@ if not WGET_AT:
 # It will be added to the WARC files and reported to the tracker.
 VERSION = '20210921.01'
 USER_AGENT = 'Archiveteam (https://wiki.archiveteam.org/; communicate at https://webirc.hackint.org/#ircs://irc.hackint.org/#archiveteam)'
-TRACKER_ID = 'google-drive'
+TRACKER_ID = 'curiouscat'
 TRACKER_HOST = 'legacy-api.arpa.li.wiuoefhoihfeiwjhwefiu'
 MULTI_ITEM_SIZE = 1
 
@@ -173,7 +173,7 @@ class MaybeSendDoneToTracker(SendDoneToTracker):
 
 CWD = os.getcwd()
 PIPELINE_SHA1 = get_hash(os.path.join(CWD, 'pipeline.py'))
-LUA_SHA1 = get_hash(os.path.join(CWD, 'google-drive.lua'))
+LUA_SHA1 = get_hash(os.path.join(CWD, 'curiouscat.lua'))
 
 def stats_id_function(item):
     d = {
@@ -193,7 +193,7 @@ class WgetArgs(object):
             '-nv',
             '--content-on-error',
             '--load-cookies', 'cookies.txt',
-            '--lua-script', 'google-drive.lua',
+            '--lua-script', 'curiouscat.lua',
             '-o', ItemInterpolation('%(item_dir)s/wget.log'),
             '--no-check-certificate',
             '--output-document', ItemInterpolation('%(item_dir)s/wget.tmp'),
@@ -264,10 +264,10 @@ class WgetArgs(object):
 # This will be shown in the warrior management panel. The logo should not
 # be too big. The deadline is optional.
 project = Project(
-    title = 'google-drive',
+    title = 'curiouscat',
     project_html = '''
-    <img class="project-logo" alt="logo" src="https://wiki.archiveteam.org/images/8/8e/Google_drive_logo.png" height="50px"/>
-    <h2>Google Drive <span class="links"><a href="https://drive.google.com/">Website</a> &middot; <a href="http://tracker.archiveteam.org/google-drive/">Leaderboard</a></span></h2>
+    <img class="project-logo" alt="logo" src="https://wiki.archiveteam.org/images/f/f5/CuriousCat_logo.png" height="50px"/>
+    <h2>CuriousCat <span class="links"><a href="https://curiouscat.qa/">Website</a> &middot; <a href="http://tracker.archiveteam.org/curiouscat/">Leaderboard</a></span></h2>
     ''',
     utc_deadline = datetime.datetime(2021,9,13, 0,0,0))
 
@@ -276,7 +276,7 @@ pipeline = Pipeline(
     GetItemFromTracker('http://{}/{}/multi={}/'
         .format(TRACKER_HOST, TRACKER_ID, MULTI_ITEM_SIZE),
         downloader, VERSION),
-    PrepareDirectories(warc_prefix='google-drive'),
+    PrepareDirectories(warc_prefix='curiouscat'),
     WgetDownload(
         WgetArgs(),
         max_tries=1,
