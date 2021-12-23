@@ -3,6 +3,7 @@ format 0
 [[]]
 not regex .*view-source:.*
 not regex .*sorry\.google\.com
+successful
 
 [user:iantoswolf]
 some exact https://curiouscat.qa/iantoswolf
@@ -15,7 +16,7 @@ some exact https://m.curiouscat.qa/1515572520/avatars/4629853.jpg
 some discovered postlikes:1050305608
 not discovered postlikes:650003395 # Post with 0 likes
 successful
-#max-urls 15 commented out b/c I forgot the syntax for this
+maxrequests 15
 
 [user:iantoswolfaaaaaa]
 some exact https://curiouscat.qa/iantoswolfaaaaaa
@@ -33,3 +34,14 @@ some exact https://media.tenor.com/images/1eb434a735ef3a2438c8c202d59ed526/tenor
 # User with "status" message type
 [user:tetekoobsf]
 some exact https://curiouscat.qa/api/v2.1/profile?username=tetekoobsf&max_timestamp=1635632945&_ob=registerOrSignin2 # Request after the one containing the object in question
+
+[postlikes:1239695362]
+some exact https://curiouscat.qa/api/v2/post/likes?postid=1239695362&_ob=registerOrSignin2
+maxrequests 1
+some discovered user:setecayoelojo
+
+# DNE
+[postlikes:934032]
+some exact https://curiouscat.qa/api/v2/post/likes?postid=934032&_ob=registerOrSignin2
+successful
+maxrequests 1

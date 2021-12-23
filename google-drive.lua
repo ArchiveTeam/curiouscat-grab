@@ -280,7 +280,6 @@ wget.callbacks.get_urls = function(file, url, is_css, iri)
             end
             
             if content_block then
-              print(JSON:encode(content_block))
               check((content_block["addresseeData"] or content_block["author"])["avatar"])
               check((content_block["addresseeData"] or content_block["author"])["banner"])
               
@@ -310,7 +309,16 @@ wget.callbacks.get_urls = function(file, url, is_css, iri)
     end
   end
 
-
+  if current_item_type == "postlikes" then
+    if string.match(url, "^https?://curiouscat%.qa/api/v2/post/likes") and status_code == 200 then
+      json = JSON:decode(load_html())
+      if json["error"] ~= "No likes" then
+        for _, obj in pairs(json["users"]) do
+          discover_item("user", string.lower(obj["username"]))
+        end
+      end
+    end
+  end
   
 
 

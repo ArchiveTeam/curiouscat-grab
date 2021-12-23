@@ -235,6 +235,10 @@ class WgetArgs(object):
                 wget_args.extend(['--warc-header', 'curiouscat-user: ' + item_value])
                 wget_args.append(f'https://curiouscat.qa/{item_value}')
                 set_start_url(item_type, item_value, f'https://curiouscat.qa/{item_value}')
+            elif item_type == 'postlikes':
+                wget_args.extend(['--warc-header', 'curiouscat-postlikes: ' + item_value])
+                wget_args.append(f'https://curiouscat.qa/api/v2/post/likes?postid={item_value}&_ob=registerOrSignin2')
+                set_start_url(item_type, item_value, f'https://curiouscat.qa/api/v2/post/likes?postid={item_value}&_ob=registerOrSignin2')
             else:
                 raise ValueError('item_type not supported.')
 
