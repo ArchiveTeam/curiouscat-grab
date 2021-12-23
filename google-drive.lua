@@ -251,6 +251,7 @@ wget.callbacks.get_urls = function(file, url, is_css, iri)
   if current_item_type == "user" then
     -- Starting point
     if string.match(url, "https?://curiouscat%.qa/[^/]+$") and status_code == 200 then
+      assert(string.match(load_html(), "<title>CuriousCat</title><link")) -- To make sure it's still up
       check("https://curiouscat.qa/api/v2.1/profile?username=" .. current_item_value .. "&_ob=registerOrSignin2")
       check("https://curiouscat.qa/api/v2/ad/check?path=/" .. current_item_value .. "&_ob=registerOrSignin2")
     end
@@ -284,7 +285,7 @@ wget.callbacks.get_urls = function(file, url, is_css, iri)
               check((content_block["addresseeData"] or content_block["author"])["banner"])
               
               if content_block["media"] then
-                assert(allowed(content_block["media"]["img"], url)) -- Don't just want to silently discard this on a failed assumption
+                assert(allowed(content_block["media"]["img"], url), content_block["media"]["img"]) -- Don't just want to silently discard this on a failed assumption
                 check(content_block["media"]["img"])
               end
               

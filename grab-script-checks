@@ -2,7 +2,6 @@ format 0
 
 [[]]
 not regex .*view-source:.*
-not regex .*sorry\.google\.com
 successful
 
 [user:iantoswolf]
