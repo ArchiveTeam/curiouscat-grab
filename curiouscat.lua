@@ -127,8 +127,9 @@ allowed = function(url, parenturl)
     tested[s] = tested[s] + 1
   end
 
-  if string.match(url, "^https?://curiouscat%.qa/api/")
-    or string.match(url, "^https?://m%.curiouscat%.qa/") -- Do not allow the initial pages, as they are only given in the WBM params
+  if string.match(url, "^https?://curiouscat%.qa/api/") -- Do not allow the initial pages, as they are only given in the WBM params
+    or string.match(url, "^https?://curiouscat%.qa/[^/]+/post/[0-9]+$")
+    or string.match(url, "^https?://m%.curiouscat%.qa/")
     or string.match(url, "^https://media%.tenor%.com/images/") then
     print_debug("allowing " .. url .. " from " .. parenturl)
     return true
@@ -256,7 +257,7 @@ wget.callbacks.get_urls = function(file, url, is_css, iri)
       check("https://curiouscat.qa/api/v2/ad/check?path=/" .. current_item_value .. "&_ob=registerOrSignin2")
     end
     
-    if string.match(url, "^https?://curiouscat%.qa/api/v2%.1/profile") and status_code == 200 then
+    if string.match(url, "^https?://curiouscat%.qa/api/v2%.1/profile%?") and status_code == 200 then
         print_debug("API on " .. url)
         local json = JSON:decode(load_html())
         if json["error"] == 404 then
@@ -292,6 +293,13 @@ wget.callbacks.get_urls = function(file, url, is_css, iri)
               assert(content_block["likes"])
               if content_block["likes"] > 0 then
                 discover_item("postlikes", content_block["id"])
+              end
+              
+              -- Remove this block if the project looks uncertain
+              if post["type"] ~= "shared_post" then
+                check("https://curiouscat.qa/" .. current_item_value .. "/post/" .. tostring(content_block["id"]))
+                check("https://curiouscat.qa/api/v2.1/profile/single_post?username=" .. current_item_value .. "&post_id=" .. tostring(content_block["id"]) .. "&_ob=registerOrSignin2")
+                check("https://curiouscat.qa/api/v2/ad/check?path=/" .. current_item_value .. "/post/" .. tostring(content_block["id"]) .. "&_ob=registerOrSignin2")
               end
             end
             
