@@ -40,7 +40,7 @@ if StrictVersion(seesaw.__version__) < StrictVersion('0.8.5'):
 WGET_AT = find_executable(
     'Wget+AT',
     [
-        'GNU Wget 1.20.3-at.20210504.01'
+        'GNU Wget 1.20.3-at.20211001.01'
     ],
     [
         './wget-at',
@@ -60,7 +60,7 @@ if not WGET_AT:
 VERSION = '20210921.01'
 USER_AGENT = 'Archiveteam (https://wiki.archiveteam.org/; communicate at https://webirc.hackint.org/#ircs://irc.hackint.org/#archiveteam)'
 TRACKER_ID = 'google-drive'
-TRACKER_HOST = 'legacy-api.arpa.li'
+TRACKER_HOST = 'legacy-api.arpa.li.wiuoefhoihfeiwjhwefiu'
 MULTI_ITEM_SIZE = 1
 
 
@@ -212,6 +212,7 @@ class WgetArgs(object):
             '--warc-header', 'operator: Archive Team',
             '--warc-header', 'x-wget-at-project-version: ' + VERSION,
             '--warc-header', 'x-wget-at-project-name: ' + TRACKER_ID,
+            '--warc-header', 'x-note-from-OrIdow6: These domains have been taken over by squatters since a few days ago; this WARC is therefore not entirely accurate (we are faking DNS results as part of the grab process) and should be kept out of the WBM; this decision approved by arkiver'
             '--warc-dedup-url-agnostic',
         ]
         
@@ -230,16 +231,10 @@ class WgetArgs(object):
             wget_args.extend(['--warc-header', 'x-wget-at-project-item-name: '+item_name])
             wget_args.append('item-name://' + item_name)
             item_type, item_value = item_name.split(':', 1)
-            if item_type == 'folder':
-                wget_args.extend(['--warc-header', 'google-drive-folder: ' + item_value])
-                wget_args.append(f'https://drive.google.com/drive/folders/{item_value}')
-                set_start_url(item_type, item_value, f'https://drive.google.com/drive/folders/{item_value}')
-            elif item_type == 'file':
-                wget_args.extend(['--warc-header', 'google-drive-file: ' + item_value])
-                wget_args.append(f'https://drive.google.com/file/d/{item_value}/view')
-                set_start_url(item_type, item_value, f'https://drive.google.com/file/d/{item_value}/view')
-            elif item_type == 'user':
-                item_names_to_submit.remove(item_name)
+            if item_type == 'user':
+                wget_args.extend(['--warc-header', 'curiouscat-user: ' + item_value])
+                wget_args.append(f'https://curiouscat.qa/{item_value}')
+                set_start_url(item_type, item_value, f'https://curiouscat.qa/{item_value}')
             else:
                 raise ValueError('item_type not supported.')
 

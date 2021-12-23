@@ -4,167 +4,32 @@ format 0
 not regex .*view-source:.*
 not regex .*sorry\.google\.com
 
-[[folder:]]
-not regex https://drive\.google\.com/file/.*
+[user:iantoswolf]
+some exact https://curiouscat.qa/iantoswolf
+some exact https://curiouscat.qa/api/v2.1/profile?username=iantoswolf&_ob=registerOrSignin2
+some exact https://curiouscat.qa/api/v2/ad/check?path=/iantoswolf&_ob=registerOrSignin2
+some exact https://m.curiouscat.qa/1515572520/banners/4629853.jpg
+some exact https://m.curiouscat.qa/1515572520/avatars/4629853.jpg
+some exact https://curiouscat.qa/api/v2.1/profile?username=iantoswolf&max_timestamp=1537001743&_ob=registerOrSignin2
+some exact https://m.curiouscat.qa/1515572520/avatars/4629853.jpg
+some discovered postlikes:1050305608
+not discovered postlikes:650003395 # Post with 0 likes
 successful
+#max-urls 15 commented out b/c I forgot the syntax for this
 
-# Folder discovering subfolders
-[folder:1oCMgJeBc55NuEasPcgwjx2FuPdQd8neu]
-some discovered folder:1RhNKcE2TDVEJINEXnpJqi6TukoBe5U1N
-some discovered folder:0B21rctf3lblGX19vaXdXdDNYVGc
+[user:iantoswolfaaaaaa]
+some exact https://curiouscat.qa/iantoswolfaaaaaa
+some exact https://curiouscat.qa/api/v2.1/profile?username=iantoswolfaaaaaa&_ob=registerOrSignin2
+some exact https://curiouscat.qa/api/v2/ad/check?path=/iantoswolfaaaaaa&_ob=registerOrSignin2
 
-# Folder with files and subfolders
-[folder:1r8I5hpSPCf_9JWECwa6c4E4tQZELd3cx]
-some discovered file:1MRCEV82M0cHXZmCY-EKQpHK-DPI8lbUw
-some discovered folder:1KTG5FVcp72j3bXQKJ1aKff3NID1WjKvO
+# User with shared post
+[user:beary_the_rookie]
+some discovered user:bad_shade
+some exact https://m.curiouscat.qa/1543240855/avatars/10584700.jpg
+some exact https://m.curiouscat.qa/1543240855/banners/10584700.jpg
+some exact https://curiouscat.qa/api/v2.1/profile?username=beary_the_rookie&max_timestamp=1557554185&_ob=registerOrSignin2 # Last of these, for a check of this as well
+some exact https://media.tenor.com/images/1eb434a735ef3a2438c8c202d59ed526/tenor.gif # Found these here
 
-# This one discovers its parent and auto-adds a resourceKey
-# (when testing vs. live version, clear your cookies)
-[folder:0B7z5EDsKyEsGfkEybGh2Y0tuc0dpMTVCbDZ4N1RXTGZMbnhwWEZqcnJmMzVYcy10SEplSlE]
-some discovered folder:1oCMgJeBc55NuEasPcgwjx2FuPdQd8neu
-some exact https://drive.google.com/folder/d/0B7z5EDsKyEsGfkEybGh2Y0tuc0dpMTVCbDZ4N1RXTGZMbnhwWEZqcnJmMzVYcy10SEplSlE
-some exact https://drive.google.com/drive/folders/0B7z5EDsKyEsGfkEybGh2Y0tuc0dpMTVCbDZ4N1RXTGZMbnhwWEZqcnJmMzVYcy10SEplSlE?resourcekey=0-GG8oF2wsj_U31DaHJw1hrQ
-some discovered user:100659384507286185456
-some exact https://drive.google.com/open?id=0B7z5EDsKyEsGfkEybGh2Y0tuc0dpMTVCbDZ4N1RXTGZMbnhwWEZqcnJmMzVYcy10SEplSlE
-
-# Empty folder
-[folder:0B7z5EDsKyEsGOGctZzFpR3h6OG8]
-some exact https://drive.google.com/folder/d/0B7z5EDsKyEsGOGctZzFpR3h6OG8
-some exact https://drive.google.com/drive/folders/0B7z5EDsKyEsGOGctZzFpR3h6OG8?resourcekey=0-KPZGukpeLBmfcWAGa4B0Nw
-some exact https://drive.google.com/drive/folders/0B7z5EDsKyEsGOGctZzFpR3h6OG8 # Overall sanity check
-some discovered folder:0B7z5EDsKyEsGfkEybGh2Y0tuc0dpMTVCbDZ4N1RXTGZMbnhwWEZqcnJmMzVYcy10SEplSlE
-# This does NOT discover 1oCMgJeBc55NuEasPcgwjx2FuPdQd8neu, the grandparent, because this is done with a separate request in the live version, that for us happens from the parent
-some exact https://drive.google.com/folderview?id=0B7z5EDsKyEsGOGctZzFpR3h6OG8
-
-# Nonexistent folder
-[folder:1oCMgJeBc55NuEasPcgwjx2FuPdQd8nea]
-some regex .*
-some exact https://drive.google.com/open?id=1oCMgJeBc55NuEasPcgwjx2FuPdQd8nea
-
-# Folder with files that have resourcKey s
-# Big, could pick a smaller one
-[folder:0B7KA3NC3P6tNeFpqZEFnU3Rhc1E]
-some exact https://lh3.googleusercontent.com/u/0/d/0B7KA3NC3P6tNMFFNNnpSZnZZaWc=w400-h380-p-k-nu-iv2?resourcekey=0-dlXyeBaDMRbb1pC8_U0-hg
-
-# Private folder
-[folder:1Px7rbE6ARqzZJNECfbpFTtMQm5gVGnbe]
-some exact https://drive.google.com/drive/folders/1Px7rbE6ARqzZJNECfbpFTtMQm5gVGnbe
-not regex https?://accounts\.google\.com/.*
-
-# Folder with status_code=500 thumbnails
-[folder:0B9UzADWnkrLHMnRsRHd0VWNWT1U]
-some regex .*
-
-#########################
-
-# Files
-[file:1hmBVl6qzhp9KDKnPbU-aA9WlWYAB4-5G]
-successful
-some exact https://drive.google.com/file/d/1hmBVl6qzhp9KDKnPbU-aA9WlWYAB4-5G/view
-not exact https://drive.google.com/file/d/1hmBVl6qzhp9KDKnPbU-aA9WlWYAB4-5G/edit
-some exact https://drive.google.com/uc?id=1hmBVl6qzhp9KDKnPbU-aA9WlWYAB4-5G
-some exact https://drive.google.com/uc?id=1hmBVl6qzhp9KDKnPbU-aA9WlWYAB4-5G&export=download # If all goes well, the ends of both uc? redirect chains should have the same payload digest and dedupe
-# This will NOT be downloading the broken info request that the web version tries to get
-some exact https://content.googleapis.com/drive/v2beta/files/1hmBVl6qzhp9KDKnPbU-aA9WlWYAB4-5G?fields=kind%2CmodifiedDate%2CmodifiedByMeDate%2ClastViewedByMeDate%2CfileSize%2Cowners(kind%2CpermissionId%2Cid)%2ClastModifyingUser(kind%2CpermissionId%2Cid)%2ChasThumbnail%2CthumbnailVersion%2Ctitle%2Cid%2CresourceKey%2Cshared%2CsharedWithMeDate%2CuserPermission(role)%2CexplicitlyTrashed%2CmimeType%2CquotaBytesUsed%2Ccopyable%2CfileExtension%2CsharingUser(kind%2CpermissionId%2Cid)%2Cspaces%2Cversion%2CteamDriveId%2ChasAugmentedPermissions%2CcreatedDate%2CtrashingUser(kind%2CpermissionId%2Cid)%2CtrashedDate%2Cparents(id)%2CshortcutDetails(targetId%2CtargetMimeType%2CtargetLookupStatus)%2Ccapabilities(canCopy%2CcanDownload%2CcanEdit%2CcanAddChildren%2CcanDelete%2CcanRemoveChildren%2CcanShare%2CcanTrash%2CcanRename%2CcanReadTeamDrive%2CcanMoveTeamDriveItem)%2Clabels(starred%2Ctrashed%2Crestricted%2Cviewed)&supportsTeamDrives=true&includeBadgedLabels=true&enforceSingleParent=true&key=AIzaSyC1qbk75NzWBvSaDh6KnsjjA9pIrP4lYIE
-# Now for the chain of download redirects; this may change, just be sure to verify in browser
-some regex https://[a-z0-9\-]+\.googleusercontent\.com/docs/securesc/.*
-# The following 2 are commented out because they do not always seem to happen
-#some exact https://docs\.google\.com/nonceSigner.*
-#some regex https://[a-z0-9\-]+\.googleusercontent\.com/docs/securesc/.*nonce=.*
-not regex .*resource[Kk]ey=.*
-
-# TODO thumbnails
-
-# JS file that can't be scanned for viruses because (or in spite) of the fact that it is an "executable" 
-[file:1CX5ccJ1J6aU0MvXkxQl-LV-cU8i1edvO]
-successful
-some exact https://drive.google.com/file/d/1CX5ccJ1J6aU0MvXkxQl-LV-cU8i1edvO/view
-not exact https://drive.google.com/file/d/1CX5ccJ1J6aU0MvXkxQl-LV-cU8i1edvO/edit
-some exact https://drive.google.com/uc?id=1CX5ccJ1J6aU0MvXkxQl-LV-cU8i1edvO
-some exact https://drive.google.com/uc?id=1CX5ccJ1J6aU0MvXkxQl-LV-cU8i1edvO&export=download
-some regex https://[a-z0-9\-]+\.googleusercontent\.com/docs/securesc/.*
-not regex .*resource[Kk]ey=.*
-
-
-# Nonexistent file
-[file:0B_i1phxOEBEDc2dMdDBSRndBYkEe]
-not exact https://drive.google.com/open?id=0B_i1phxOEBEDc2dMdDBSRndBYkEe
-not regex .*resource[Kk]ey=.*
-successful
-
-# File with resourceKey
-[file:0B9GwlJ3A-h08ODRkOTI5N2MtNzg2Yy00N2FjLWJkNzAtODE3M2I3ZGZjMjYy]
-some exact https://drive.google.com/file/d/0B9GwlJ3A-h08ODRkOTI5N2MtNzg2Yy00N2FjLWJkNzAtODE3M2I3ZGZjMjYy/edit?resourcekey=0-Bu9xzox8-NrQVi-WTb8RJg
-not regex https://[a-z0-9\-]+\.googleusercontent\.com/docs/securesc/.*
-some regex .*resource[Kk]ey=.*
-
-successful
-
-[file:1CBgn2Pst2v_-g3_w9dT6I1yIadkwKCuw]
-some discovered user:105322761024609550201
-some discovered folder:1tI-Ipx26FGdgaPvgs1bBl_weLSW4TIKB
-some regex https://[a-z0-9\-]+\.googleusercontent\.com/docs/securesc/.*
-not regex .*resource[Kk]ey=.*
-
-successful
-
-# "You can't access this item because it is in violation of our Terms of Service."
-[file:0B5U2FfI9UVTzNVo5MHZxUHU0d2s]
-some exact https://drive.google.com/file/d/0B5U2FfI9UVTzNVo5MHZxUHU0d2s/view
-not regex .*resource[Kk]ey=.*
-
-successful
-
-# Private file
-[file:1IrMFzJeH5TRGPCh4tVluldg-Guux7vVz]
-some exact https://drive.google.com/file/d/1IrMFzJeH5TRGPCh4tVluldg-Guux7vVz/view
-not regex https?://accounts\.google\.com/.*
-not regex .*resource[Kk]ey=.*
-
-successful
-
-# File which has lastModifyingUser but where there is no ID
-[file:1q0DCy1ijl8HoEYq4X2JpJXjkJb9oymUE]
-successful
-not exact https://drive.google.com/open?id=1q0DCy1ijl8HoEYq4X2JpJXjkJb9oymUE
-some regex https://[a-z0-9\-]+\.googleusercontent\.com/docs/securesc/.*
-not regex .*resource[Kk]ey=.*
-
-
-# file_info_callback gives 404 but then open?id= redirects to a login page - perhaps a private file that was incompletedly deleted?
-[file:1_3uGns8hH9MfT7dJSjVuAC1WlZmNzKnH]
-successful
-not exact https://drive.google.com/open?id=1_3uGns8hH9MfT7dJSjVuAC1WlZmNzKnH
-not regex .*resource[Kk]ey=.*
-
-
-# Video
-[file:file:0B_i1phxOEBEDc2dMdDBSRndBYkE]
-not regex .*resource[Kk]ey=.*
-not regex https://[a-z0-9\-]+\.googleusercontent\.com/docs/securesc/.* # Do not download
-successful
-
-# Google Forms
-[file:1egMXFeXL4S7xNYJUg7Zs888-I2p1BLJmQ85k_2tp7LE]
-not regex .*resource[Kk]ey=.*
-not regex https://[a-z0-9\-]+\.googleusercontent\.com/docs/securesc/.* # Do not download
-successful
-
-# Google Maps
-[file:1bE9Z_FoCy8ghQ8RoJtlsMtTFNTcWWt24]
-not regex .*resource[Kk]ey=.*
-not regex https://[a-z0-9\-]+\.googleusercontent\.com/docs/securesc/.* # Do not download
-successful
-
-# docs file that has fileSize somehow
-[file:1Y7tXb80a6Cre2VTFAU0LTVXDguhbm33BXh]
-not regex .*resource[Kk]ey=.*
-not regex https://[a-z0-9\-]+\.googleusercontent\.com/docs/securesc/.* # Do not download
-successful
-
-# Things which should fail
-# file:1xy6fSdYzmPXcFW8clJaxCeyOWoFnh4wF - quota exceeded
-# file:1bE9Z_FoCy8ghQ8RoJtlsMtTFNTcWWt24 - maps
-
-
-# TODO find a big file that can't be scanned for viruses
+# User with "status" message type
+[user:tetekoobsf]
+some exact https://curiouscat.qa/api/v2.1/profile?username=tetekoobsf&max_timestamp=1635632945&_ob=registerOrSignin2 # Request after the one containing the object in question
