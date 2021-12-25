@@ -17,13 +17,11 @@ local downloaded = {}
 local addedtolist = {}
 local abortgrab = false
 
-
-discovered_items = {}
+local discovered_items = {}
 local last_main_site_time = 0
 local current_item_type = nil
 local current_item_value = nil
 local next_start_url_index = 1
-
 
 io.stdout:setvbuf("no") -- So prints are not buffered - http://lua.2524044.n2.nabble.com/print-stdout-and-flush-td6406981.html
 
@@ -33,7 +31,7 @@ if urlparse == nil or http == nil then
   abortgrab = true
 end
 
-do_debug = true
+local do_debug = false
 print_debug = function(a)
   if do_debug then
     print(a)
@@ -138,7 +136,6 @@ allowed = function(url, parenturl)
   return false
 
   --return false
-
 
   --assert(false, "This segment should not be reachable")
 end
@@ -248,7 +245,7 @@ wget.callbacks.get_urls = function(file, url, is_css, iri)
     end
     return html
   end
-  
+
   if current_item_type == "user" then
     -- Starting point
     if string.match(url, "https?://curiouscat%.qa/[^/]+$") and status_code == 200 then
@@ -256,7 +253,7 @@ wget.callbacks.get_urls = function(file, url, is_css, iri)
       check("https://curiouscat.qa/api/v2.1/profile?username=" .. current_item_value .. "&_ob=registerOrSignin2")
       check("https://curiouscat.qa/api/v2/ad/check?path=/" .. current_item_value .. "&_ob=registerOrSignin2")
     end
-    
+
     if string.match(url, "^https?://curiouscat%.qa/api/v2%.1/profile%?") and status_code == 200 then
         print_debug("API on " .. url)
         local json = JSON:decode(load_html())
@@ -280,21 +277,21 @@ wget.callbacks.get_urls = function(file, url, is_css, iri)
             else
               error("Unknown post type " .. post["type"])
             end
-            
+
             if content_block then
               check((content_block["addresseeData"] or content_block["author"])["avatar"])
               check((content_block["addresseeData"] or content_block["author"])["banner"])
-              
+
               if content_block["media"] then
                 assert(allowed(content_block["media"]["img"], url), content_block["media"]["img"]) -- Don't just want to silently discard this on a failed assumption
                 check(content_block["media"]["img"])
               end
-              
+
               assert(content_block["likes"])
               if content_block["likes"] > 0 then
                 discover_item("postlikes", content_block["id"])
               end
-              
+
               -- Remove this block if the project looks uncertain
               if post["type"] ~= "shared_post" then
                 check("https://curiouscat.qa/" .. current_item_value .. "/post/" .. tostring(content_block["id"]))
@@ -302,13 +299,13 @@ wget.callbacks.get_urls = function(file, url, is_css, iri)
                 check("https://curiouscat.qa/api/v2/ad/check?path=/" .. current_item_value .. "/post/" .. tostring(content_block["id"]) .. "&_ob=registerOrSignin2")
               end
             end
-            
+
             if time and time < lowest_ts then
                 lowest_ts = time
               end
           end
-          
-          
+
+
           if lowest_ts == 100000000000000 then
             assert(not string.match(url, "&max_timestamp=")) -- Something is wrong if we get an empty on a page other than the first
           else
@@ -320,7 +317,7 @@ wget.callbacks.get_urls = function(file, url, is_css, iri)
 
   if current_item_type == "postlikes" then
     if string.match(url, "^https?://curiouscat%.qa/api/v2/post/likes") and status_code == 200 then
-      json = JSON:decode(load_html())
+      local json = JSON:decode(load_html())
       if json["error"] ~= "No likes" then
         for _, obj in pairs(json["users"]) do
           discover_item("user", string.lower(obj["username"]))
@@ -328,7 +325,7 @@ wget.callbacks.get_urls = function(file, url, is_css, iri)
       end
     end
   end
-  
+
 
 
 
@@ -379,7 +376,6 @@ wget.callbacks.httploop_result = function(url, err, http_stat)
     return wget.actions.ABORT
   end
 
-
     --[[
   -- Handle redirects not in download chains
   if status_code >= 300 and status_code <= 399 then
@@ -405,18 +401,16 @@ wget.callbacks.httploop_result = function(url, err, http_stat)
     end
   end]]
 
-
   local do_retry = false
   local maxtries = 12
   local url_is_essential = true
-
 
   -- Whitelist instead of blacklist status codes
   if status_code ~= 200 then
     print("Server returned " .. http_stat.statcode .. " (" .. err .. "). Sleeping.\n")
     do_retry = true
   end
-  
+
   -- Check for rate limiting in the API (status code == 200)
   if string.match(url["url"], "^https?://curiouscat%.qa/api/") then
     if string.match(read_file(http_stat["local_file"]), "^{'error': 'Wait") then
@@ -424,9 +418,6 @@ wget.callbacks.httploop_result = function(url, err, http_stat)
       do_retry = true
     end
   end
-  
-  
-
 
   if do_retry then
     if tries >= maxtries then
@@ -443,7 +434,6 @@ wget.callbacks.httploop_result = function(url, err, http_stat)
       tries = tries + 1
     end
   end
-
 
   if do_retry and sleep_time > 0.001 then
     print("Sleeping " .. sleep_time .. "s").
@@ -496,7 +486,7 @@ end
 
 wget.callbacks.finish = function(start_time, end_time, wall_time, numurls, total_downloaded_bytes, total_download_time)
   end_of_item()
-  queue_list_to(discovered_items, "fill-me-in")
+  queue_list_to(discovered_items, "curiouscat-ijxdk4ufz59tw83")
 end
 
 wget.callbacks.write_to_warc = function(url, http_stat)

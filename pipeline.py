@@ -57,10 +57,10 @@ if not WGET_AT:
 #
 # Update this each time you make a non-cosmetic change.
 # It will be added to the WARC files and reported to the tracker.
-VERSION = '20210921.01'
+VERSION = '20211225.01'
 USER_AGENT = 'Archiveteam (https://wiki.archiveteam.org/; communicate at https://webirc.hackint.org/#ircs://irc.hackint.org/#archiveteam)'
 TRACKER_ID = 'curiouscat'
-TRACKER_HOST = 'legacy-api.arpa.li.wiuoefhoihfeiwjhwefiu'
+TRACKER_HOST = 'legacy-api.arpa.li'
 MULTI_ITEM_SIZE = 1
 
 
@@ -205,14 +205,14 @@ class WgetArgs(object):
             '--page-requisites',
             '--timeout', '30',
             '--tries', 'inf',
-            '--domains', 'voat.co',
+            '--domains', 'curiouscat.qa',
             '--span-hosts',
             '--waitretry', '30',
             '--warc-file', ItemInterpolation('%(item_dir)s/%(warc_file_base)s'),
             '--warc-header', 'operator: Archive Team',
             '--warc-header', 'x-wget-at-project-version: ' + VERSION,
             '--warc-header', 'x-wget-at-project-name: ' + TRACKER_ID,
-            '--warc-header', 'x-note-from-OrIdow6: These domains have been taken over by squatters since a few days ago; this WARC is therefore not entirely accurate (we are faking DNS results as part of the grab process) and should be kept out of the WBM; this decision approved by arkiver'
+            '--warc-header', 'x-note-from-OrIdow6: The domain curiouscat.qa has been taken over by squatters since a few days ago. This WARC is therefore not accurate (we are faking DNS results as part of the grab process) and should never be included in the Wayback Machine for this reason. This decision approved by arkiver.'
             '--warc-dedup-url-agnostic',
         ]
         
@@ -269,7 +269,7 @@ project = Project(
     <img class="project-logo" alt="logo" src="https://wiki.archiveteam.org/images/f/f5/CuriousCat_logo.png" height="50px"/>
     <h2>CuriousCat <span class="links"><a href="https://curiouscat.qa/">Website</a> &middot; <a href="http://tracker.archiveteam.org/curiouscat/">Leaderboard</a></span></h2>
     ''',
-    utc_deadline = datetime.datetime(2021,9,13, 0,0,0))
+    )#utc_deadline = datetime.datetime(2021,9,13, 0,0,0))
 
 pipeline = Pipeline(
     CheckIP(),
