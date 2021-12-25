@@ -260,6 +260,7 @@ wget.callbacks.get_urls = function(file, url, is_css, iri)
         if json["error"] == 404 then
           print_debug("Profile req indicates user does not exist")
         else
+          assert(json["error"] == nil, "error unacceptable: " .. JSON:encode(json["error"]))
           local lowest_ts = 100000000000000
           for _, post in pairs(json["posts"]) do
             local content_block = nil
@@ -319,6 +320,7 @@ wget.callbacks.get_urls = function(file, url, is_css, iri)
     if string.match(url, "^https?://curiouscat%.qa/api/v2/post/likes") and status_code == 200 then
       local json = JSON:decode(load_html())
       if json["error"] ~= "No likes" then
+        assert(json["error"] == nil, "error unacceptable: " .. JSON:encode(json["error"]))
         for _, obj in pairs(json["users"]) do
           discover_item("user", string.lower(obj["username"]))
         end

@@ -57,7 +57,7 @@ if not WGET_AT:
 #
 # Update this each time you make a non-cosmetic change.
 # It will be added to the WARC files and reported to the tracker.
-VERSION = '20211225.01'
+VERSION = '20211225.02'
 USER_AGENT = 'Archiveteam (https://wiki.archiveteam.org/; communicate at https://webirc.hackint.org/#ircs://irc.hackint.org/#archiveteam)'
 TRACKER_ID = 'curiouscat'
 TRACKER_HOST = 'legacy-api.arpa.li'
@@ -212,7 +212,7 @@ class WgetArgs(object):
             '--warc-header', 'operator: Archive Team',
             '--warc-header', 'x-wget-at-project-version: ' + VERSION,
             '--warc-header', 'x-wget-at-project-name: ' + TRACKER_ID,
-            '--warc-header', 'x-note-from-OrIdow6: The domain curiouscat.qa has been taken over by squatters since a few days ago. This WARC is therefore not accurate (we are faking DNS results as part of the grab process) and should never be included in the Wayback Machine for this reason. This decision approved by arkiver.'
+            '--warc-header', 'x-note: The domain curiouscat.qa has been taken over by squatters since a few days ago. This WARC is therefore not accurate (we are faking DNS results as part of the grab process) and should never be included in the Wayback Machine for this reason. This decision approved by arkiver.'
             '--warc-dedup-url-agnostic',
         ]
         
