@@ -31,7 +31,7 @@ if urlparse == nil or http == nil then
   abortgrab = true
 end
 
-local do_debug = false
+local do_debug = true
 print_debug = function(a)
   if do_debug then
     print(a)
@@ -125,9 +125,10 @@ allowed = function(url, parenturl)
     tested[s] = tested[s] + 1
   end
 
-  if string.match(url, "^https?://curiouscat%.qa/api/") -- Do not allow the initial pages, instead only let them in through the wget args
-    or string.match(url, "^https?://curiouscat%.qa/[^/]+/post/[0-9]+$")
-    or string.match(url, "^https?://m%.curiouscat%.qa/")
+  if string.match(url, "^https?://curiouscat%.live/api/") -- Do not allow the initial pages, instead only let them in through the wget args
+    or string.match(url, "^https?://curiouscat%.live/[^/]+/post/[0-9]+$")
+    or string.match(url, "^https?://m%.curiouscat%.live/")
+    or string.match(url, "^https?://aws%.curiouscat%.me/") -- Replacement for m. ?
     or string.match(url, "^https://media%.tenor%.com/images/") then
     print_debug("allowing " .. url .. " from " .. parenturl)
     return true
@@ -138,16 +139,6 @@ allowed = function(url, parenturl)
   --return false
 
   --assert(false, "This segment should not be reachable")
-end
-
- wget.callbacks.lookup_host = function(host)
-  if host == "curiouscat.qa" then
-    return "172.67.75.111"
-  elseif host == "m.curiouscat.qa" then
-    return "104.26.8.190"
-  end
-
-  return nil
 end
 
 
@@ -248,13 +239,13 @@ wget.callbacks.get_urls = function(file, url, is_css, iri)
 
   if current_item_type == "user" then
     -- Starting point
-    if string.match(url, "https?://curiouscat%.qa/[^/]+$") and status_code == 200 then
+    if string.match(url, "https?://curiouscat%.live/[^/]+$") and status_code == 200 then
       assert(string.match(load_html(), "<title>CuriousCat</title><link")) -- To make sure it's still up
-      check("https://curiouscat.qa/api/v2.1/profile?username=" .. current_item_value .. "&_ob=registerOrSignin2")
-      check("https://curiouscat.qa/api/v2/ad/check?path=/" .. current_item_value .. "&_ob=registerOrSignin2")
+      check("https://curiouscat.live/api/v2.1/profile?username=" .. current_item_value .. "&_ob=registerOrSignin2")
+      check("https://curiouscat.live/api/v2/ad/check?path=/" .. current_item_value .. "&_ob=registerOrSignin2")
     end
 
-    if string.match(url, "^https?://curiouscat%.qa/api/v2%.1/profile%?") and status_code == 200 then
+    if string.match(url, "^https?://curiouscat%.live/api/v2%.1/profile%?") and status_code == 200 then
         print_debug("API on " .. url)
         local json = JSON:decode(load_html())
         if json["error"] == 404 then
@@ -295,9 +286,9 @@ wget.callbacks.get_urls = function(file, url, is_css, iri)
 
               -- Remove this block if the project looks uncertain
               if post["type"] ~= "shared_post" then
-                check("https://curiouscat.qa/" .. current_item_value .. "/post/" .. tostring(content_block["id"]))
-                check("https://curiouscat.qa/api/v2.1/profile/single_post?username=" .. current_item_value .. "&post_id=" .. tostring(content_block["id"]) .. "&_ob=registerOrSignin2")
-                check("https://curiouscat.qa/api/v2/ad/check?path=/" .. current_item_value .. "/post/" .. tostring(content_block["id"]) .. "&_ob=registerOrSignin2")
+                check("https://curiouscat.live/" .. current_item_value .. "/post/" .. tostring(content_block["id"]))
+                check("https://curiouscat.live/api/v2.1/profile/single_post?username=" .. current_item_value .. "&post_id=" .. tostring(content_block["id"]) .. "&_ob=registerOrSignin2")
+                check("https://curiouscat.live/api/v2/ad/check?path=/" .. current_item_value .. "/post/" .. tostring(content_block["id"]) .. "&_ob=registerOrSignin2")
               end
             end
 
@@ -310,14 +301,14 @@ wget.callbacks.get_urls = function(file, url, is_css, iri)
           if lowest_ts == 100000000000000 then
             assert(not string.match(url, "&max_timestamp=")) -- Something is wrong if we get an empty on a page other than the first
           else
-            check("https://curiouscat.qa/api/v2.1/profile?username=" .. current_item_value .. "&max_timestamp=" .. tostring(lowest_ts) .. "&_ob=registerOrSignin2") -- Following Jodizzle's scheme, this just uses the queued URLs as a set, and "detects" the last page by the fact that the lowest is it itself
+            check("https://curiouscat.live/api/v2.1/profile?username=" .. current_item_value .. "&max_timestamp=" .. tostring(lowest_ts) .. "&_ob=registerOrSignin2") -- Following Jodizzle's scheme, this just uses the queued URLs as a set, and "detects" the last page by the fact that the lowest is it itself
           end
         end
     end
   end
 
   if current_item_type == "postlikes" then
-    if string.match(url, "^https?://curiouscat%.qa/api/v2/post/likes") and status_code == 200 then
+    if string.match(url, "^https?://curiouscat%.live/api/v2/post/likes") and status_code == 200 then
       local json = JSON:decode(load_html())
       if json["error"] ~= "No likes" then
         assert(json["error"] == nil, "error unacceptable: " .. JSON:encode(json["error"]))
@@ -414,7 +405,7 @@ wget.callbacks.httploop_result = function(url, err, http_stat)
   end
 
   -- Check for rate limiting in the API (status code == 200)
-  if string.match(url["url"], "^https?://curiouscat%.qa/api/") then
+  if string.match(url["url"], "^https?://curiouscat%.live/api/") then
     if string.match(read_file(http_stat["local_file"]), "^{'error': 'Wait") then
       print("API rate-limited, sleeping")
       do_retry = true

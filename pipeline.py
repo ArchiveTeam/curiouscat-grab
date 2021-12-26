@@ -212,7 +212,7 @@ class WgetArgs(object):
             '--warc-header', 'operator: Archive Team',
             '--warc-header', 'x-wget-at-project-version: ' + VERSION,
             '--warc-header', 'x-wget-at-project-name: ' + TRACKER_ID,
-            '--warc-header', 'x-note: The domain curiouscat.qa has been taken over by squatters since a few days ago. This WARC is therefore not accurate (we are faking DNS results as part of the grab process) and should never be included in the Wayback Machine for this reason. This decision approved by arkiver.',
+            '--warc-header', 'x-note: Previous versions of this project used fake DNS results to get around an expired domain name. The site has since relaunched under a new domain and we are capturing that; so this is good data and can go into the Wayback Machine.',
             '--warc-dedup-url-agnostic',
         ]
         
@@ -233,12 +233,12 @@ class WgetArgs(object):
             item_type, item_value = item_name.split(':', 1)
             if item_type == 'user':
                 wget_args.extend(['--warc-header', 'curiouscat-user: ' + item_value])
-                wget_args.append(f'https://curiouscat.qa/{item_value}')
-                set_start_url(item_type, item_value, f'https://curiouscat.qa/{item_value}')
+                wget_args.append(f'https://curiouscat.live/{item_value}')
+                set_start_url(item_type, item_value, f'https://curiouscat.live/{item_value}')
             elif item_type == 'postlikes':
                 wget_args.extend(['--warc-header', 'curiouscat-postlikes: ' + item_value])
-                wget_args.append(f'https://curiouscat.qa/api/v2/post/likes?postid={item_value}&_ob=registerOrSignin2')
-                set_start_url(item_type, item_value, f'https://curiouscat.qa/api/v2/post/likes?postid={item_value}&_ob=registerOrSignin2')
+                wget_args.append(f'https://curiouscat.live/api/v2/post/likes?postid={item_value}&_ob=registerOrSignin2')
+                set_start_url(item_type, item_value, f'https://curiouscat.live/api/v2/post/likes?postid={item_value}&_ob=registerOrSignin2')
             else:
                 raise ValueError('item_type not supported.')
 
@@ -267,7 +267,7 @@ project = Project(
     title = 'curiouscat',
     project_html = '''
     <img class="project-logo" alt="logo" src="https://wiki.archiveteam.org/images/f/f5/CuriousCat_logo.png" height="50px"/>
-    <h2>CuriousCat <span class="links"><a href="https://curiouscat.qa/">Website</a> &middot; <a href="http://tracker.archiveteam.org/curiouscat/">Leaderboard</a></span></h2>
+    <h2>CuriousCat <span class="links"><a href="https://curiouscat.live/">Website</a> &middot; <a href="http://tracker.archiveteam.org/curiouscat/">Leaderboard</a></span></h2>
     ''',
     )#utc_deadline = datetime.datetime(2021,9,13, 0,0,0))
 

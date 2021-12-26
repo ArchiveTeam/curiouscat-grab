@@ -5,46 +5,46 @@ not regex .*view-source:.*
 successful
 
 [user:iantoswolf]
-some exact https://curiouscat.qa/iantoswolf
-some exact https://curiouscat.qa/api/v2.1/profile?username=iantoswolf&_ob=registerOrSignin2
-some exact https://curiouscat.qa/api/v2/ad/check?path=/iantoswolf&_ob=registerOrSignin2
-some exact https://m.curiouscat.qa/1515572520/banners/4629853.jpg
-some exact https://m.curiouscat.qa/1515572520/avatars/4629853.jpg
-some exact https://curiouscat.qa/api/v2.1/profile?username=iantoswolf&max_timestamp=1537001743&_ob=registerOrSignin2
-some exact https://m.curiouscat.qa/1515572520/avatars/4629853.jpg
+some exact https://curiouscat.live/iantoswolf
+some exact https://curiouscat.live/api/v2.1/profile?username=iantoswolf&_ob=registerOrSignin2
+some exact https://curiouscat.live/api/v2/ad/check?path=/iantoswolf&_ob=registerOrSignin2
+some exact https://aws.curiouscat.me/1515572520/banners/4629853.jpg
+some exact https://aws.curiouscat.me/1515572520/avatars/4629853.jpg
+some exact https://curiouscat.live/api/v2.1/profile?username=iantoswolf&max_timestamp=1537001743&_ob=registerOrSignin2
+some exact https://aws.curiouscat.me/1515572520/avatars/4629853.jpg
 some discovered postlikes:1050305608
 not discovered postlikes:650003395 # Post with 0 likes
-some exact https://curiouscat.qa/iantoswolf/post/650003395
-some exact https://curiouscat.qa/api/v2.1/profile/single_post?username=iantoswolf&post_id=650003395&_ob=registerOrSignin2
-some exact https://curiouscat.qa/api/v2/ad/check?path=/iantoswolf/post/650003395&_ob=registerOrSignin2
+some exact https://curiouscat.live/iantoswolf/post/650003395
+some exact https://curiouscat.live/api/v2.1/profile/single_post?username=iantoswolf&post_id=650003395&_ob=registerOrSignin2
+some exact https://curiouscat.live/api/v2/ad/check?path=/iantoswolf/post/650003395&_ob=registerOrSignin2
 successful
 #maxrequests 15
 
 [user:iantoswolfaaaaaa]
-some exact https://curiouscat.qa/iantoswolfaaaaaa
-some exact https://curiouscat.qa/api/v2.1/profile?username=iantoswolfaaaaaa&_ob=registerOrSignin2
-some exact https://curiouscat.qa/api/v2/ad/check?path=/iantoswolfaaaaaa&_ob=registerOrSignin2
+some exact https://curiouscat.live/iantoswolfaaaaaa
+some exact https://curiouscat.live/api/v2.1/profile?username=iantoswolfaaaaaa&_ob=registerOrSignin2
+some exact https://curiouscat.live/api/v2/ad/check?path=/iantoswolfaaaaaa&_ob=registerOrSignin2
 
 # User with shared post
 [user:beary_the_rookie]
 some discovered user:bad_shade
-some exact https://m.curiouscat.qa/1543240855/avatars/10584700.jpg
-some exact https://m.curiouscat.qa/1543240855/banners/10584700.jpg
-some exact https://curiouscat.qa/api/v2.1/profile?username=beary_the_rookie&max_timestamp=1557554185&_ob=registerOrSignin2 # Last of these, for a check of this as well
+some exact https://aws.curiouscat.me/1543240855/avatars/10584700.jpg
+some exact https://aws.curiouscat.me/1543240855/banners/10584700.jpg
+some exact https://curiouscat.live/api/v2.1/profile?username=beary_the_rookie&max_timestamp=1557554185&_ob=registerOrSignin2 # Last of these, for a check of this as well
 some exact https://media.tenor.com/images/1eb434a735ef3a2438c8c202d59ed526/tenor.gif # Found these here
-not exact https://curiouscat.qa/beary_the_rookie/post/1076843417 # Empty (/redundant) page of shared post
+not exact https://curiouscat.live/beary_the_rookie/post/1076843417 # Empty (/redundant) page of shared post
 
 # User with "status" message type
 [user:tetekoobsf]
-some exact https://curiouscat.qa/api/v2.1/profile?username=tetekoobsf&max_timestamp=1635632945&_ob=registerOrSignin2 # Request after the one containing the object in question
+some exact https://curiouscat.live/api/v2.1/profile?username=tetekoobsf&max_timestamp=1635632945&_ob=registerOrSignin2 # Request after the one containing the object in question
 
 [postlikes:1239695362]
-some exact https://curiouscat.qa/api/v2/post/likes?postid=1239695362&_ob=registerOrSignin2
+some exact https://curiouscat.live/api/v2/post/likes?postid=1239695362&_ob=registerOrSignin2
 maxrequests 1
 some discovered user:setecayoelojo
 
 # DNE
 [postlikes:934032]
-some exact https://curiouscat.qa/api/v2/post/likes?postid=934032&_ob=registerOrSignin2
+some exact https://curiouscat.live/api/v2/post/likes?postid=934032&_ob=registerOrSignin2
 successful
 maxrequests 1
