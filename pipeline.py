@@ -231,10 +231,14 @@ class WgetArgs(object):
             wget_args.extend(['--warc-header', 'x-wget-at-project-item-name: '+item_name])
             wget_args.append('item-name://' + item_name)
             item_type, item_value = item_name.split(':', 1)
-            if item_type == 'userid':
-                wget_args.extend(['--warc-header', 'curiouscat-userid: ' + item_value])
-                wget_args.append(f'https://curiouscat.live/api/v2.1/get_profile_userData?userID={item_value}')
-                set_start_url(item_type, item_value, f'https://curiouscat.live/api/v2.1/get_profile_userData?userID={item_value}')
+            if item_type == 'user':
+                wget_args.extend(['--warc-header', 'curiouscat-user: ' + item_value])
+                wget_args.append(f'https://curiouscat.live/{item_value}')
+                set_start_url(item_type, item_value, f'https://curiouscat.live/{item_value}')
+            elif item_type == 'postlikes':
+                wget_args.extend(['--warc-header', 'curiouscat-postlikes: ' + item_value])
+                wget_args.append(f'https://curiouscat.live/api/v2/post/likes?postid={item_value}&_ob=registerOrSignin2')
+                set_start_url(item_type, item_value, f'https://curiouscat.live/api/v2/post/likes?postid={item_value}&_ob=registerOrSignin2')
             else:
                 raise ValueError('item_type not supported.')
 
