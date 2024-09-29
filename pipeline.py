@@ -57,7 +57,7 @@ if not WGET_AT:
 #
 # Update this each time you make a non-cosmetic change.
 # It will be added to the WARC files and reported to the tracker.
-VERSION = '20241029.01'
+VERSION = '20241029.02'
 USER_AGENT = 'Archiveteam (https://wiki.archiveteam.org/; communicate at https://webirc.hackint.org/#ircs://irc.hackint.org/#archiveteam)'
 TRACKER_ID = 'curiouscat2'
 TRACKER_HOST = 'legacy-api.arpa.li'
@@ -270,8 +270,8 @@ class WgetArgs(object):
 project = Project(
     title = 'curiouscat',
     project_html = '''
-    <img class="project-logo" alt="logo" src="https://wiki.archiveteam.org/images/f/f5/CuriousCat_logo.png" height="50px"/>
-    <h2>CuriousCat <span class="links"><a href="https://curiouscat.live/">Website</a> &middot; <a href="http://tracker.archiveteam.org/curiouscat/">Leaderboard</a></span></h2>
+    <img class="project-logo" alt="logo" src="https://wiki.archiveteam.org/images/1/17/Curiouscat_icon.png" height="50px"/>
+    <h2>CuriousCat <span class="links"><a href="https://curiouscat.live/">Website</a> &middot; <a href="http://tracker.archiveteam.org/curiouscat2/">Leaderboard</a></span></h2>
     ''',
     utc_deadline = datetime.datetime(2024,10,7, 0,0,0))
 

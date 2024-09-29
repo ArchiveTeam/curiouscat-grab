@@ -564,7 +564,7 @@ end
 
 wget.callbacks.finish = function(start_time, end_time, wall_time, numurls, total_downloaded_bytes, total_download_time)
   end_of_item()
-  queue_list_to(discovered_items, "curiouscat-ijxdk4ufz59tw83")
+  queue_list_to(discovered_items, "curiouscat2-sga1chxhgi4y0gen")
 end
 
 wget.callbacks.write_to_warc = function(url, http_stat)
