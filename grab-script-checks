@@ -42,13 +42,14 @@ some exact https://curiouscat.live/api/v2/profile/following?username=beary_the_r
 
 # User with "status" message type
 [user:tetekoobsf]
-some exact https://curiouscat.live/api/v2.1/profile?username=tetekoobsf&max_timestamp=1635632945&_ob=registerOrSignin2 # Request after the one containing the object in question
+some exact https://curiouscat.live/api/v2.1/profile?username=tetekoobsf&max_timestamp=1641810145&_ob=noregisterOrSignin2 # Request after the one containing the object in question
 some exact https://aws.curiouscat.me/replyimg/d71d5c73-428b-4159-94b5-c719aa6854c3.jpg # Also check that it gets this image
+some exact https://aws.curiouscat.me/replyimg/7865b505-9f07-4320-b7db-63bc0c1818c6.jpg
 
 [postlikes:1239695362]
 some exact https://curiouscat.live/api/v2/post/likes?postid=1239695362&_ob=registerOrSignin2
 some exact https://curiouscat.live/api/v2/post/likes?postid=1239695362&_ob=noregisterOrSignin2
-maxrequests 1
+maxrequests 2
 some discovered user:Setecayoelojo
 
 # DNE

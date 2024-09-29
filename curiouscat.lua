@@ -293,6 +293,7 @@ wget.callbacks.get_urls = function(file, url, is_css, iri)
             elseif post["type"] == "status" then
               content_block = post["status"]
               time = post["status"]["timestamp"]
+              print("Status type found on user " .. current_item_value) -- Trying to find a replacement for user:tetekoobsf, which is gigantic, in the tests
             elseif post["type"] == "shared_post" then
               discover_item("user", post["post"]["addresseeData"]["username"])
               content_block = post["post"]
@@ -372,7 +373,7 @@ wget.callbacks.get_urls = function(file, url, is_css, iri)
     if string.match(url, "^https?://curiouscat%.live/api/v2/post/likes") and status_code == 200 then
       local json = JSON:decode(load_html())
       if not json["error"] then
-        check(url:gsub("_ob=registerOrSignin2", "_ob=noregisterOrSignin2"))
+        check((url:gsub("_ob=registerOrSignin2", "_ob=noregisterOrSignin2")))
         for _, obj in pairs(json["users"]) do
           discover_item("user", obj["username"])
         end
@@ -477,6 +478,8 @@ wget.callbacks.httploop_result = function(url, err, http_stat)
       do_retry = true
     elseif json["error"] == 404 then
       print_debug("HLS 404")
+    elseif json["error"] == "No likes" then
+      print_debug("HLS no likes")
     elseif json["error"] then
       error("Unknown error in response (dumping) " .. read_file(http_stat["local_file"]))
     end
@@ -509,7 +512,28 @@ wget.callbacks.httploop_result = function(url, err, http_stat)
 end
 
 
-queue_list_to = function(list, key)
+local send_binary = function(to_send, key)
+  local tries = 0
+  while tries < 10 do
+    local body, code, headers, status = http.request(
+            "https://legacy-api.arpa.li/backfeed/legacy/" .. key,
+            to_send
+    )
+    if code == 200 or code == 409 then
+      break
+    end
+    print("Failed to submit discovered URLs." .. tostring(code) .. " " .. tostring(body)) -- From arkiver https://github.com/ArchiveTeam/vlive-grab/blob/master/vlive.lua
+    os.execute("sleep " .. math.floor(math.pow(2, tries)))
+    tries = tries + 1
+  end
+  if tries == 10 then
+    abortgrab = true
+  end
+end
+
+-- Taken verbatim from previous projects I've done'
+local queue_list_to = function(list, key)
+  assert(key)
   if do_debug then
     for item, _ in pairs(list) do
       print("Would have sent discovered item " .. item)
@@ -524,24 +548,15 @@ queue_list_to = function(list, key)
         to_send = to_send .. "\0" .. item
       end
       print("Queued " .. item)
+
+      if #to_send > 1500 then
+        send_binary(to_send .. "\0", key)
+        to_send = ""
+      end
     end
 
-    if to_send ~= nil then
-      local tries = 0
-      while tries < 10 do
-        local body, code, headers, status = http.request(
-          "http://blackbird-amqp.meo.ws:23038/" .. key .. "/",
-          to_send
-        )
-        if code == 200 or code == 409 then
-          break
-        end
-        os.execute("sleep " .. math.floor(math.pow(2, tries)))
-        tries = tries + 1
-      end
-      if tries == 10 then
-        abortgrab = true
-      end
+    if to_send ~= nil and #to_send > 0 then
+      send_binary(to_send .. "\0", key)
     end
   end
 end
@@ -555,7 +570,7 @@ end
 wget.callbacks.write_to_warc = function(url, http_stat)
   if string.match(url["url"], "^https?://curiouscat%.live/api/") then
     local json = JSON:decode(read_file(http_stat["local_file"]))
-    if json["error"] and json["error"] ~= 404 then
+    if json["error"] and json["error"] ~= 404 and json["error"] ~= "No likes" then
       return false
     end
   end

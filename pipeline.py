@@ -191,6 +191,11 @@ class WgetArgs(object):
             WGET_AT,
             '-U', USER_AGENT,
             '-nv',
+            '--host-lookups', 'dns',
+            '--hosts-file', '/dev/null',
+            '--resolvconf-file', '/dev/null',
+            '--dns-servers', '9.9.9.10,149.112.112.10,2620:fe::10,2620:fe::fe:10',
+            '--reject-reserved-subnets',
             '--content-on-error',
             '--load-cookies', 'cookies.txt',
             '--lua-script', 'curiouscat.lua',
@@ -268,7 +273,7 @@ project = Project(
     <img class="project-logo" alt="logo" src="https://wiki.archiveteam.org/images/f/f5/CuriousCat_logo.png" height="50px"/>
     <h2>CuriousCat <span class="links"><a href="https://curiouscat.live/">Website</a> &middot; <a href="http://tracker.archiveteam.org/curiouscat/">Leaderboard</a></span></h2>
     ''',
-    )#utc_deadline = datetime.datetime(2021,9,13, 0,0,0))
+    utc_deadline = datetime.datetime(2024,10,7, 0,0,0))
 
 pipeline = Pipeline(
     CheckIP(),
