@@ -40,7 +40,7 @@ if StrictVersion(seesaw.__version__) < StrictVersion('0.8.5'):
 WGET_AT = find_executable(
     'Wget+AT',
     [
-        'GNU Wget 1.20.3-at.20211001.01'
+        'GNU Wget 1.21.3-at.20231215.01'
     ],
     [
         './wget-at',
@@ -205,14 +205,13 @@ class WgetArgs(object):
             '--page-requisites',
             '--timeout', '30',
             '--tries', 'inf',
-            '--domains', 'curiouscat.qa',
+            '--domains', 'curiouscat.live',
             '--span-hosts',
             '--waitretry', '30',
             '--warc-file', ItemInterpolation('%(item_dir)s/%(warc_file_base)s'),
             '--warc-header', 'operator: Archive Team',
             '--warc-header', 'x-wget-at-project-version: ' + VERSION,
             '--warc-header', 'x-wget-at-project-name: ' + TRACKER_ID,
-            '--warc-header', 'x-note: Previous versions of this project used fake DNS results to get around an expired domain name. The site has since relaunched under a new domain and we are capturing that; so this is good data and can go into the Wayback Machine.',
             '--warc-dedup-url-agnostic',
         ]
         

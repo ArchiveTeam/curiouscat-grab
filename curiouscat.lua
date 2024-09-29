@@ -23,6 +23,10 @@ local current_item_type = nil
 local current_item_value = nil
 local next_start_url_index = 1
 
+local current_item_value_proper_capitalization = nil
+local do_retry = false -- read by get_urls
+
+
 io.stdout:setvbuf("no") -- So prints are not buffered - http://lua.2524044.n2.nabble.com/print-stdout-and-flush-td6406981.html
 
 if urlparse == nil or http == nil then
@@ -46,7 +50,7 @@ end
 
 -- Function to be called whenever an item's download ends.
 end_of_item = function()
-	-- Empty right now
+	current_item_value_proper_capitalization = nil
 end
 
 set_new_item = function(url)
@@ -63,9 +67,18 @@ set_new_item = function(url)
 
 end
 
+
 discover_item = function(item_type, item_name)
   assert(item_type)
   assert(item_name)
+  -- Assert that if the page (or something in the script, erroneously) is giving us an alternate form with different capitalization, there is only one form
+  if string.lower(item_name) == string.lower(current_item_value) and item_name ~= current_item_value then
+    if current_item_value_proper_capitalization ~= nil then
+      assert(current_item_value_proper_capitalization == item_name)
+    else
+      current_item_value_proper_capitalization = item_name
+    end
+  end
 
   if not discovered_items[item_type .. ":" .. item_name] then
     print_debug("Queuing for discovery " .. item_type .. ":" .. item_name)
@@ -129,7 +142,8 @@ allowed = function(url, parenturl)
     or string.match(url, "^https?://curiouscat%.live/[^/]+/post/[0-9]+$")
     or string.match(url, "^https?://m%.curiouscat%.live/")
     or string.match(url, "^https?://aws%.curiouscat%.me/") -- Replacement for m. ?
-    or string.match(url, "^https://media%.tenor%.com/images/") then
+    or string.match(url, "^https://media%.tenor%.com/images/")
+    or string.match(url, "^https?://curiouscat%.me/") then
     print_debug("allowing " .. url .. " from " .. parenturl)
     return true
   end
@@ -236,13 +250,24 @@ wget.callbacks.get_urls = function(file, url, is_css, iri)
     end
     return html
   end
+  
+  -- See onboardingAB.js - this which of these 2 options is used is determined by a random number
+  local function check_ob(urla, force)
+    check(urla .. "&_ob=registerOrSignin2", force)
+    check(urla .. "&_ob=noregisterOrSignin2", force)
+  end
+  
+  local function assert_avatar_or_banner(urla)
+    assert(urla:match("^https://aws%.curiouscat%.me/%d+/avatars/%d+%.jpg$") or urla:match("^https://aws%.curiouscat%.me/%d+/banners/%d+%.jpg$"))
+  end
 
   if current_item_type == "user" then
     -- Starting point
     if string.match(url, "https?://curiouscat%.live/[^/]+$") and status_code == 200 then
       assert(string.match(load_html(), "<title>CuriousCat</title><link")) -- To make sure it's still up
-      check("https://curiouscat.live/api/v2.1/profile?username=" .. current_item_value .. "&_ob=registerOrSignin2")
-      check("https://curiouscat.live/api/v2/ad/check?path=/" .. current_item_value .. "&_ob=registerOrSignin2")
+      check_ob("https://curiouscat.live/api/v2.1/profile?username=" .. current_item_value)
+      check_ob("https://curiouscat.live/api/v2/ad/check?path=/" .. current_item_value)
+      check((url:gsub("^https?://curiouscat%.live/", "https://curiouscat.me/"))) -- Get the redirect
     end
 
     if string.match(url, "^https?://curiouscat%.live/api/v2%.1/profile%?") and status_code == 200 then
@@ -250,8 +275,14 @@ wget.callbacks.get_urls = function(file, url, is_css, iri)
         local json = JSON:decode(load_html())
         if json["error"] == 404 then
           print_debug("Profile req indicates user does not exist")
+        elseif json["error"] then
+          assert(do_retry)
         else
           assert(json["error"] == nil, "error unacceptable: " .. JSON:encode(json["error"]))
+          assert_avatar_or_banner(json["avatar"])
+          assert_avatar_or_banner(json["banner"])
+          check(json["avatar"])
+          check(json["banner"])
           local lowest_ts = 100000000000000
           for _, post in pairs(json["posts"]) do
             local content_block = nil
@@ -263,7 +294,7 @@ wget.callbacks.get_urls = function(file, url, is_css, iri)
               content_block = post["status"]
               time = post["status"]["timestamp"]
             elseif post["type"] == "shared_post" then
-              discover_item("user", string.lower(post["post"]["addresseeData"]["username"]))
+              discover_item("user", post["post"]["addresseeData"]["username"])
               content_block = post["post"]
               time = post["shared_timestamp"]
             else
@@ -274,10 +305,15 @@ wget.callbacks.get_urls = function(file, url, is_css, iri)
               check((content_block["addresseeData"] or content_block["author"])["avatar"])
               check((content_block["addresseeData"] or content_block["author"])["banner"])
 
+              if content_block["senderData"] and content_block["senderData"]["username"] then
+                discover_item("user", content_block["senderData"]["username"])
+              end
+              
               if content_block["media"] then
                 assert(allowed(content_block["media"]["img"], url), content_block["media"]["img"]) -- Don't just want to silently discard this on a failed assumption
                 check(content_block["media"]["img"])
               end
+              
 
               assert(content_block["likes"])
               if content_block["likes"] > 0 then
@@ -287,8 +323,8 @@ wget.callbacks.get_urls = function(file, url, is_css, iri)
               -- Remove this block if the project looks uncertain
               if post["type"] ~= "shared_post" then
                 check("https://curiouscat.live/" .. current_item_value .. "/post/" .. tostring(content_block["id"]))
-                check("https://curiouscat.live/api/v2.1/profile/single_post?username=" .. current_item_value .. "&post_id=" .. tostring(content_block["id"]) .. "&_ob=registerOrSignin2")
-                check("https://curiouscat.live/api/v2/ad/check?path=/" .. current_item_value .. "/post/" .. tostring(content_block["id"]) .. "&_ob=registerOrSignin2")
+                check_ob("https://curiouscat.live/api/v2.1/profile/single_post?username=" .. current_item_value .. "&post_id=" .. tostring(content_block["id"]))
+                check_ob("https://curiouscat.live/api/v2/ad/check?path=/" .. current_item_value .. "/post/" .. tostring(content_block["id"]))
               end
             end
 
@@ -301,20 +337,47 @@ wget.callbacks.get_urls = function(file, url, is_css, iri)
           if lowest_ts == 100000000000000 then
             assert(not string.match(url, "&max_timestamp=")) -- Something is wrong if we get an empty on a page other than the first
           else
-            check("https://curiouscat.live/api/v2.1/profile?username=" .. current_item_value .. "&max_timestamp=" .. tostring(lowest_ts) .. "&_ob=registerOrSignin2") -- Following Jodizzle's scheme, this just uses the queued URLs as a set, and "detects" the last page by the fact that the lowest is it itself
+            check_ob("https://curiouscat.live/api/v2.1/profile?username=" .. current_item_value .. "&max_timestamp=" .. tostring(lowest_ts)) -- Following Jodizzle's scheme, this just uses the queued URLs as a set, and "detects" the last page by the fact that the lowest is it itself
+          end
+          
+          
+          -- Get the first page of followers/following
+          assert((json["following_count"] == nil) == (json["followers_count"] == nil))
+          if json["following_count"] then
+            check_ob("https://curiouscat.live/api/v2/profile/followers?username=" .. current_item_value)
+            check_ob("https://curiouscat.live/api/v2/profile/following?username=" .. current_item_value)
           end
         end
+    end
+    
+    if string.match(url, "^https?://curiouscat%.live/api/v2/profile/follow") and status_code == 200 then -- followers and following
+      local json = JSON:decode(load_html())
+      
+      if json["error"] then
+        assert(do_retry)
+      else
+        for _, relation in pairs(json["result"]) do
+          discover_item("user", relation["username"])
+        end
+        
+        if #json["result"] > 0 then
+          check_ob("https://curiouscat.live/api/v2/" .. json["paging"]["next"])
+          assert(json["paging"]["next"]:gmatch(json["paging"]["next_cursor"]))
+        end
+      end
     end
   end
 
   if current_item_type == "postlikes" then
     if string.match(url, "^https?://curiouscat%.live/api/v2/post/likes") and status_code == 200 then
       local json = JSON:decode(load_html())
-      if json["error"] ~= "No likes" then
-        assert(json["error"] == nil, "error unacceptable: " .. JSON:encode(json["error"]))
+      if not json["error"] then
+        check(url:gsub("_ob=registerOrSignin2", "_ob=noregisterOrSignin2"))
         for _, obj in pairs(json["users"]) do
-          discover_item("user", string.lower(obj["username"]))
+          discover_item("user", obj["username"])
         end
+      elseif json["error"] ~= "No likes" then
+        assert(do_retry)
       end
     end
   end
@@ -393,22 +456,29 @@ wget.callbacks.httploop_result = function(url, err, http_stat)
       return wget.actions.NOTHING
     end
   end]]
-
-  local do_retry = false
+  
+  
+  do_retry = false
   local maxtries = 12
   local url_is_essential = true
 
   -- Whitelist instead of blacklist status codes
-  if status_code ~= 200 then
+  if status_code ~= 200
+    and not (url["url"]:match("^https?://curiouscat.me/") and status_code == 302) then
     print("Server returned " .. http_stat.statcode .. " (" .. err .. "). Sleeping.\n")
     do_retry = true
   end
 
   -- Check for rate limiting in the API (status code == 200)
   if string.match(url["url"], "^https?://curiouscat%.live/api/") then
-    if string.match(read_file(http_stat["local_file"]), "^{'error': 'Wait") then
+    local json = JSON:decode(read_file(http_stat["local_file"]))
+    if json["error"] == "Wait a bit" then
       print("API rate-limited, sleeping")
       do_retry = true
+    elseif json["error"] == 404 then
+      print_debug("HLS 404")
+    elseif json["error"] then
+      error("Unknown error in response (dumping) " .. read_file(http_stat["local_file"]))
     end
   end
 
@@ -429,7 +499,7 @@ wget.callbacks.httploop_result = function(url, err, http_stat)
   end
 
   if do_retry and sleep_time > 0.001 then
-    print("Sleeping " .. sleep_time .. "s").
+    print("Sleeping " .. sleep_time .. "s")
     os.execute("sleep " .. sleep_time)
     return wget.actions.CONTINUE
   end
@@ -483,6 +553,12 @@ wget.callbacks.finish = function(start_time, end_time, wall_time, numurls, total
 end
 
 wget.callbacks.write_to_warc = function(url, http_stat)
+  if string.match(url["url"], "^https?://curiouscat%.live/api/") then
+    local json = JSON:decode(read_file(http_stat["local_file"]))
+    if json["error"] and json["error"] ~= 404 then
+      return false
+    end
+  end
   set_new_item(url["url"])
   return true
 end
