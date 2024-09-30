@@ -258,7 +258,7 @@ wget.callbacks.get_urls = function(file, url, is_css, iri)
   end
   
   local function assert_avatar_or_banner(urla)
-    assert(urla:match("^https://aws%.curiouscat%.me/%d+/avatars/%d+%.jpg$") or urla:match("^https://aws%.curiouscat%.me/%d+/banners/%d+%.jpg$"))
+    assert(urla:match("^https://aws%.curiouscat%.me/%d+/avatars/%d+%.%a%a%a$") or urla:match("^https://aws%.curiouscat%.me/%d+/banners/%d+%.%a%a%a$"))
   end
 
   if current_item_type == "user" then
@@ -466,7 +466,8 @@ wget.callbacks.httploop_result = function(url, err, http_stat)
   -- Whitelist instead of blacklist status codes
   if status_code ~= 200
     and not (url["url"]:match("^https?://curiouscat.me/") and status_code == 302)
-    and not (url["url"]:match("^https?://aws%.curiouscat%.me/0/banners/%d+%.jpg$") and status_code == 404) then
+    and not (url["url"]:match("^https?://aws%.curiouscat%.me/0/banners/%d+%.%a%a%a$") and status_code == 404)
+    and not (url["url"]:match("^https?://aws%.curiouscat%.me/%d+/replyimg/%d+%.%a%a%a$") and status_code == 404) then
     print("Server returned " .. http_stat.statcode .. " (" .. err .. "). Sleeping.\n")
     do_retry = true
   end
