@@ -466,7 +466,7 @@ wget.callbacks.httploop_result = function(url, err, http_stat)
   -- Whitelist instead of blacklist status codes
   if status_code ~= 200
     and not (url["url"]:match("^https?://curiouscat.me/") and status_code == 302)
-    and not (url["url"] == "https://aws.curiouscat.me/0/banners/16278194.jpg" and status_code == 404) then
+    and not (url["url"]:match("^https?://aws%.curiouscat%.me/0/banners/%d+%.jpg$") and status_code == 404) then
     print("Server returned " .. http_stat.statcode .. " (" .. err .. "). Sleeping.\n")
     do_retry = true
   end
