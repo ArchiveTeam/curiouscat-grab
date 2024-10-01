@@ -474,18 +474,23 @@ wget.callbacks.httploop_result = function(url, err, http_stat)
 
   -- Check for rate limiting in the API (status code == 200)
   if string.match(url["url"], "^https?://curiouscat%.live/api/") then
-    local json = JSON:decode(read_file(http_stat["local_file"]))
-    if json["error"] == "Wait a bit" then
-      print("API rate-limited, sleeping")
+    if read_file(http_stat["local_file"]) == "" then
+      print("Got empty response, retrying")
       do_retry = true
-    elseif json["error"] == 404 then
-      print_debug("HLS 404")
-    elseif json["error"] == "No likes" then
-      print_debug("HLS no likes")
-    elseif json["error"] then
-      error("Unknown error in response (dumping) " .. read_file(http_stat["local_file"]))
-    else -- Sleep on API requests
-      os.execute("sleep 1")
+    else
+      local json = JSON:decode(read_file(http_stat["local_file"]))
+      if json["error"] == "Wait a bit" then
+        print("API rate-limited, sleeping")
+        do_retry = true
+      elseif json["error"] == 404 then
+        print_debug("HLS 404")
+      elseif json["error"] == "No likes" then
+        print_debug("HLS no likes")
+      elseif json["error"] then
+        error("Unknown error in response (dumping) " .. read_file(http_stat["local_file"]))
+      else -- Sleep on API requests
+        os.execute("sleep 1")
+      end
     end
   end
 
@@ -573,6 +578,10 @@ end
 
 wget.callbacks.write_to_warc = function(url, http_stat)
   if string.match(url["url"], "^https?://curiouscat%.live/api/") then
+    -- Ephemeral empty API response
+    if read_file(http_stat["local_file"]) == "" then
+      return false
+    end
     local json = JSON:decode(read_file(http_stat["local_file"]))
     if not json then
       error("Failed to parse as JSON the response from " .. url["url"] .. " : " .. read_file(http_stat["local_file"]))
