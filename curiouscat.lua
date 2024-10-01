@@ -466,8 +466,8 @@ wget.callbacks.httploop_result = function(url, err, http_stat)
   -- Whitelist instead of blacklist status codes
   if status_code ~= 200
     and not (url["url"]:match("^https?://curiouscat.me/") and status_code == 302)
-    and not (url["url"]:match("^https?://aws%.curiouscat%.me/0/banners/%d+%.%a%a%a$") and status_code == 404)
-    and not (url["url"]:match("^https?://aws%.curiouscat%.me/%d+/replyimg/%d+%.%a%a%a$") and status_code == 404) then
+    and not (url["url"]:match("^https?://aws%.curiouscat%.me/%d+/%w+/%d+%.%a%a%a$") and status_code == 404)
+    and not (url["url"]:match("^https?://media%.tenor%.com/") and status_code == 404) then
     print("Server returned " .. http_stat.statcode .. " (" .. err .. "). Sleeping.\n")
     do_retry = true
   end
@@ -484,6 +484,8 @@ wget.callbacks.httploop_result = function(url, err, http_stat)
       print_debug("HLS no likes")
     elseif json["error"] then
       error("Unknown error in response (dumping) " .. read_file(http_stat["local_file"]))
+    else -- Sleep on API requests
+      os.execute("sleep 1")
     end
   end
 
@@ -572,6 +574,9 @@ end
 wget.callbacks.write_to_warc = function(url, http_stat)
   if string.match(url["url"], "^https?://curiouscat%.live/api/") then
     local json = JSON:decode(read_file(http_stat["local_file"]))
+    if not json then
+      error("Failed to parse as JSON the response from " .. url["url"] .. " : " .. read_file(http_stat["local_file"]))
+    end
     if json["error"] and json["error"] ~= 404 and json["error"] ~= "No likes" then
       return false
     end
