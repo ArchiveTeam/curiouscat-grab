@@ -266,7 +266,6 @@ wget.callbacks.get_urls = function(file, url, is_css, iri)
     if string.match(url, "https?://curiouscat%.live/[^/]+$") and status_code == 200 then
       assert(string.match(load_html(), "<title>CuriousCat</title><link")) -- To make sure it's still up
       check_ob("https://curiouscat.live/api/v2.1/profile?username=" .. current_item_value)
-      check_ob("https://curiouscat.live/api/v2/ad/check?path=/" .. current_item_value)
       check((url:gsub("^https?://curiouscat%.live/", "https://curiouscat.me/"))) -- Get the redirect
     end
 
@@ -325,7 +324,6 @@ wget.callbacks.get_urls = function(file, url, is_css, iri)
               if post["type"] ~= "shared_post" then
                 check("https://curiouscat.live/" .. current_item_value .. "/post/" .. tostring(content_block["id"]))
                 check_ob("https://curiouscat.live/api/v2.1/profile/single_post?username=" .. current_item_value .. "&post_id=" .. tostring(content_block["id"]))
-                check_ob("https://curiouscat.live/api/v2/ad/check?path=/" .. current_item_value .. "/post/" .. tostring(content_block["id"]))
               end
             end
 
