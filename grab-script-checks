@@ -14,13 +14,19 @@ some exact https://curiouscat.live/api/v2.1/profile?username=IantosWolf&max_time
 some exact https://aws.curiouscat.me/1515572520/avatars/4629853.jpg
 some discovered postlikes:1050305608
 not discovered postlikes:650003395 # Post with 0 likes
-some exact https://curiouscat.live/IantosWolf/post/650003395
-some exact https://curiouscat.live/api/v2.1/profile/single_post?username=IantosWolf&post_id=650003395&_ob=registerOrSignin2
+not exact https://curiouscat.live/IantosWolf/post/650003395
+not exact https://curiouscat.live/api/v2.1/profile/single_post?username=IantosWolf&post_id=650003395&_ob=registerOrSignin2
 some discovered user:Beary_the_Rookie # Asker
 some discovered user:Werethrope # Following
 some discovered user:Oken_Sye
 successful
 #maxrequests 15
+
+[post:IantosWolf/650003395]
+some exact https://curiouscat.live/IantosWolf/post/650003395
+some exact https://curiouscat.live/api/v2.1/profile/single_post?username=IantosWolf&post_id=650003395&_ob=registerOrSignin2
+some exact https://curiouscat.live/api/v2.1/profile/single_post?username=IantosWolf&post_id=650003395&_ob=noregisterOrSignin2
+
 
 # Nonexistent user
 [user:iantoswolfaaaaaa]
@@ -34,7 +40,7 @@ some exact https://aws.curiouscat.me/1543240855/avatars/10584700.jpg
 some exact https://aws.curiouscat.me/1543240855/banners/10584700.jpg
 some exact https://curiouscat.live/api/v2.1/profile?username=beary_the_rookie&max_timestamp=1557554185&_ob=registerOrSignin2 # Last of these, for a check of this as well
 some exact https://media.tenor.com/images/1eb434a735ef3a2438c8c202d59ed526/tenor.gif # Found these here
-not exact https://curiouscat.live/beary_the_rookie/post/1076843417 # Empty (/redundant) page of shared post
+not discovered post:beary_the_rookie/1076843417 # Empty (/redundant) page of shared post
 some exact https://curiouscat.live/api/v2/profile/following?username=beary_the_rookie&cursor=MQ==&_ob=registerOrSignin2 # Second (in this case, empty) following page
 
 # User with "status" message type

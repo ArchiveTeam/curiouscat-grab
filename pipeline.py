@@ -57,7 +57,7 @@ if not WGET_AT:
 #
 # Update this each time you make a non-cosmetic change.
 # It will be added to the WARC files and reported to the tracker.
-VERSION = '20241101.02'
+VERSION = '20241105.01'
 USER_AGENT = 'Archiveteam (https://wiki.archiveteam.org/; communicate at https://webirc.hackint.org/#ircs://irc.hackint.org/#archiveteam)'
 TRACKER_ID = 'curiouscat2'
 TRACKER_HOST = 'legacy-api.arpa.li'
@@ -243,6 +243,11 @@ class WgetArgs(object):
                 wget_args.extend(['--warc-header', 'curiouscat-postlikes: ' + item_value])
                 wget_args.append(f'https://curiouscat.live/api/v2/post/likes?postid={item_value}&_ob=registerOrSignin2')
                 set_start_url(item_type, item_value, f'https://curiouscat.live/api/v2/post/likes?postid={item_value}&_ob=registerOrSignin2')
+            elif item_type == 'post':
+                wget_args.extend(['--warc-header', 'curiouscat-postlikes: ' + item_value])
+                user, post = item_value.split("/", 2)
+                wget_args.append(f'https://curiouscat.live/{user}/post/{post}')
+                set_start_url(item_type, item_value, f'https://curiouscat.live/{user}/post/{post}')
             else:
                 raise ValueError('item_type not supported.')
 

@@ -260,6 +260,15 @@ wget.callbacks.get_urls = function(file, url, is_css, iri)
   local function assert_avatar_or_banner(urla)
     assert(urla:match("^https://aws%.curiouscat%.me/%d+/avatars/%d+%.%a%a%a$") or urla:match("^https://aws%.curiouscat%.me/%d+/banners/%d+%.%a%a%a$"))
   end
+  
+  if current_item_type == "post" then
+    if string.match(url, "^https?://curiouscat%.live/.+/post/%d+$") then
+      local slash_pos = current_item_value:find("/")
+      local user = current_item_value:sub(1, slash_pos - 1)
+      local post = current_item_value:sub(slash_pos + 1)
+      check_ob("https://curiouscat.live/api/v2.1/profile/single_post?username=" .. user .. "&post_id=" .. post)
+    end
+  end
 
   if current_item_type == "user" then
     -- Starting point
@@ -268,7 +277,7 @@ wget.callbacks.get_urls = function(file, url, is_css, iri)
       check_ob("https://curiouscat.live/api/v2.1/profile?username=" .. current_item_value)
       check((url:gsub("^https?://curiouscat%.live/", "https://curiouscat.me/"))) -- Get the redirect
     end
-
+    
     if string.match(url, "^https?://curiouscat%.live/api/v2%.1/profile%?") and status_code == 200 then
         print_debug("API on " .. url)
         local json = JSON:decode(load_html())
@@ -320,10 +329,8 @@ wget.callbacks.get_urls = function(file, url, is_css, iri)
                 discover_item("postlikes", content_block["id"])
               end
 
-              -- Remove this block if the project looks uncertain
               if post["type"] ~= "shared_post" then
-                check("https://curiouscat.live/" .. current_item_value .. "/post/" .. tostring(content_block["id"]))
-                check_ob("https://curiouscat.live/api/v2.1/profile/single_post?username=" .. current_item_value .. "&post_id=" .. tostring(content_block["id"]))
+                discover_item("post", current_item_value .. "/" .. content_block["id"])
               end
             end
 
