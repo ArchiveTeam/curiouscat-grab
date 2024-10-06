@@ -350,8 +350,9 @@ wget.callbacks.get_urls = function(file, url, is_css, iri)
           -- Get the first page of followers/following
           assert((json["following_count"] == nil) == (json["followers_count"] == nil))
           if json["following_count"] then
-            check_ob("https://curiouscat.live/api/v2/profile/followers?username=" .. current_item_value)
-            check_ob("https://curiouscat.live/api/v2/profile/following?username=" .. current_item_value)
+            --[[check_ob("https://curiouscat.live/api/v2/profile/followers?username=" .. current_item_value)
+            check_ob("https://curiouscat.live/api/v2/profile/following?username=" .. current_item_value)]]
+            discover_item("social", current_item_value)
           end
         end
     end

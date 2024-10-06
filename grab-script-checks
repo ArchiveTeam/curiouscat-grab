@@ -16,9 +16,14 @@ some discovered postlikes:1050305608
 not discovered postlikes:650003395 # Post with 0 likes
 not exact https://curiouscat.live/IantosWolf/post/650003395
 not exact https://curiouscat.live/api/v2.1/profile/single_post?username=IantosWolf&post_id=650003395&_ob=registerOrSignin2
+
+# Don't get followers and following
+not exact https://curiouscat.live/api/v2/profile/followers?username=IantosWolf&_ob=registerOrSignin2
+not exact https://curiouscat.live/api/v2/profile/following?username=IantosWolf&_ob=registerOrSignin2
 some discovered user:Beary_the_Rookie # Asker
-some discovered user:Werethrope # Following
-some discovered user:Oken_Sye
+not discovered user:Werethrope # Following
+not discovered user:Oken_Sye
+some discovered social:IantosWolf
 successful
 #maxrequests 15
 
@@ -35,13 +40,14 @@ some exact https://curiouscat.live/api/v2.1/profile?username=iantoswolfaaaaaa&_o
 
 # User with shared post
 [user:beary_the_rookie]
-some discovered user:bad_shade
+not discovered user:bad_shade
 some exact https://aws.curiouscat.me/1543240855/avatars/10584700.jpg
 some exact https://aws.curiouscat.me/1543240855/banners/10584700.jpg
 some exact https://curiouscat.live/api/v2.1/profile?username=beary_the_rookie&max_timestamp=1557554185&_ob=registerOrSignin2 # Last of these, for a check of this as well
 some exact https://media.tenor.com/images/1eb434a735ef3a2438c8c202d59ed526/tenor.gif # Found these here
 not discovered post:beary_the_rookie/1076843417 # Empty (/redundant) page of shared post
-some exact https://curiouscat.live/api/v2/profile/following?username=beary_the_rookie&cursor=MQ==&_ob=registerOrSignin2 # Second (in this case, empty) following page
+not exact https://curiouscat.live/api/v2/profile/following?username=beary_the_rookie&cursor=MQ==&_ob=registerOrSignin2 # Second (in this case, empty) following page
+some discovered social:beary_the_rookie
 
 # User with "status" message type
 # Interestingly enough, has "47" followers but only 46 are in the list
