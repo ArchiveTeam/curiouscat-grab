@@ -241,10 +241,10 @@ class WgetArgs(object):
                 set_start_url(item_type, item_value, f'https://curiouscat.live/{item_value}')
             elif item_type == 'postlikes':
                 wget_args.extend(['--warc-header', 'curiouscat-postlikes: ' + item_value])
-                wget_args.append(f'https://curiouscat.live/api/v2/post/likes?postid={item_value}&_ob=registerOrSignin2')
-                set_start_url(item_type, item_value, f'https://curiouscat.live/api/v2/post/likes?postid={item_value}&_ob=registerOrSignin2')
+                wget_args.append(f'https://curiouscat.live/api/v2/post/likes?postid={item_value}&_ob=noregisterOrSignin2')
+                set_start_url(item_type, item_value, f'https://curiouscat.live/api/v2/post/likes?postid={item_value}&_ob=noregisterOrSignin2')
             elif item_type == 'post':
-                wget_args.extend(['--warc-header', 'curiouscat-postlikes: ' + item_value])
+                wget_args.extend(['--warc-header', 'curiouscat-post: ' + item_value])
                 user, post = item_value.split("/", 2)
                 wget_args.append(f'https://curiouscat.live/{user}/post/{post}')
                 set_start_url(item_type, item_value, f'https://curiouscat.live/{user}/post/{post}')

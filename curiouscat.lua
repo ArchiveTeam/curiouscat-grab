@@ -253,7 +253,7 @@ wget.callbacks.get_urls = function(file, url, is_css, iri)
   
   -- See onboardingAB.js - this which of these 2 options is used is determined by a random number
   local function check_ob(urla, force)
-    check(urla .. "&_ob=registerOrSignin2", force)
+    -- check(urla .. "&_ob=registerOrSignin2", force)
     check(urla .. "&_ob=noregisterOrSignin2", force)
   end
   
@@ -379,7 +379,7 @@ wget.callbacks.get_urls = function(file, url, is_css, iri)
     if string.match(url, "^https?://curiouscat%.live/api/v2/post/likes") and status_code == 200 then
       local json = JSON:decode(load_html())
       if not json["error"] then
-        check((url:gsub("_ob=registerOrSignin2", "_ob=noregisterOrSignin2")))
+        -- check((url:gsub("_ob=registerOrSignin2", "_ob=noregisterOrSignin2")))
         for _, obj in pairs(json["users"]) do
           discover_item("user", obj["username"])
         end
@@ -511,7 +511,11 @@ wget.callbacks.httploop_result = function(url, err, http_stat)
         return wget.actions.ABORT
       end
     else
-      sleep_time = math.floor(math.pow(2, tries))
+      if do_debug then
+        sleep_time = math.floor(math.pow(1.1, tries))
+      else
+        sleep_time = math.floor(math.pow(2, tries))
+      end
       tries = tries + 1
     end
   end

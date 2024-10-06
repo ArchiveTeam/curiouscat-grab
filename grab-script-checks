@@ -2,24 +2,25 @@ format 0
 
 [[]]
 not regex .*view-source:.*
+not regex .*_ob=registerOrSignin2.*
 successful
 
 [user:IantosWolf]
 some exact https://curiouscat.live/IantosWolf
 some exact https://curiouscat.me/IantosWolf # Redirect
-some exact https://curiouscat.live/api/v2.1/profile?username=IantosWolf&_ob=registerOrSignin2
+some exact https://curiouscat.live/api/v2.1/profile?username=IantosWolf&_ob=noregisterOrSignin2
 some exact https://aws.curiouscat.me/1515572520/banners/4629853.jpg
 some exact https://aws.curiouscat.me/1515572520/avatars/4629853.jpg
-some exact https://curiouscat.live/api/v2.1/profile?username=IantosWolf&max_timestamp=1537001743&_ob=registerOrSignin2
+some exact https://curiouscat.live/api/v2.1/profile?username=IantosWolf&max_timestamp=1537001743&_ob=noregisterOrSignin2
 some exact https://aws.curiouscat.me/1515572520/avatars/4629853.jpg
 some discovered postlikes:1050305608
 not discovered postlikes:650003395 # Post with 0 likes
 not exact https://curiouscat.live/IantosWolf/post/650003395
-not exact https://curiouscat.live/api/v2.1/profile/single_post?username=IantosWolf&post_id=650003395&_ob=registerOrSignin2
+not exact https://curiouscat.live/api/v2.1/profile/single_post?username=IantosWolf&post_id=650003395&_ob=noregisterOrSignin2
 
 # Don't get followers and following
-not exact https://curiouscat.live/api/v2/profile/followers?username=IantosWolf&_ob=registerOrSignin2
-not exact https://curiouscat.live/api/v2/profile/following?username=IantosWolf&_ob=registerOrSignin2
+not exact https://curiouscat.live/api/v2/profile/followers?username=IantosWolf&_ob=noregisterOrSignin2
+not exact https://curiouscat.live/api/v2/profile/following?username=IantosWolf&_ob=noregisterOrSignin2
 some discovered user:Beary_the_Rookie # Asker
 not discovered user:Werethrope # Following
 not discovered user:Oken_Sye
@@ -29,24 +30,24 @@ successful
 
 [post:IantosWolf/650003395]
 some exact https://curiouscat.live/IantosWolf/post/650003395
-some exact https://curiouscat.live/api/v2.1/profile/single_post?username=IantosWolf&post_id=650003395&_ob=registerOrSignin2
+some exact https://curiouscat.live/api/v2.1/profile/single_post?username=IantosWolf&post_id=650003395&_ob=noregisterOrSignin2
 some exact https://curiouscat.live/api/v2.1/profile/single_post?username=IantosWolf&post_id=650003395&_ob=noregisterOrSignin2
 
 
 # Nonexistent user
 [user:iantoswolfaaaaaa]
 some exact https://curiouscat.live/iantoswolfaaaaaa
-some exact https://curiouscat.live/api/v2.1/profile?username=iantoswolfaaaaaa&_ob=registerOrSignin2
+some exact https://curiouscat.live/api/v2.1/profile?username=iantoswolfaaaaaa&_ob=noregisterOrSignin2
 
 # User with shared post
 [user:beary_the_rookie]
 not discovered user:bad_shade
 some exact https://aws.curiouscat.me/1543240855/avatars/10584700.jpg
 some exact https://aws.curiouscat.me/1543240855/banners/10584700.jpg
-some exact https://curiouscat.live/api/v2.1/profile?username=beary_the_rookie&max_timestamp=1557554185&_ob=registerOrSignin2 # Last of these, for a check of this as well
+some exact https://curiouscat.live/api/v2.1/profile?username=beary_the_rookie&max_timestamp=1557554185&_ob=noregisterOrSignin2 # Last of these, for a check of this as well
 some exact https://media.tenor.com/images/1eb434a735ef3a2438c8c202d59ed526/tenor.gif # Found these here
 not discovered post:beary_the_rookie/1076843417 # Empty (/redundant) page of shared post
-not exact https://curiouscat.live/api/v2/profile/following?username=beary_the_rookie&cursor=MQ==&_ob=registerOrSignin2 # Second (in this case, empty) following page
+not exact https://curiouscat.live/api/v2/profile/following?username=beary_the_rookie&cursor=MQ==&_ob=noregisterOrSignin2 # Second (in this case, empty) following page
 some discovered social:beary_the_rookie
 
 # User with "status" message type
@@ -57,18 +58,17 @@ some exact https://aws.curiouscat.me/replyimg/d71d5c73-428b-4159-94b5-c719aa6854
 some exact https://aws.curiouscat.me/replyimg/7865b505-9f07-4320-b7db-63bc0c1818c6.jpg
 
 [postlikes:1239695362]
-some exact https://curiouscat.live/api/v2/post/likes?postid=1239695362&_ob=registerOrSignin2
 some exact https://curiouscat.live/api/v2/post/likes?postid=1239695362&_ob=noregisterOrSignin2
 # maxrequests 2 Disabled due to 500s
 some discovered user:Setecayoelojo
 
 # DNE
 [postlikes:934032]
-some exact https://curiouscat.live/api/v2/post/likes?postid=934032&_ob=registerOrSignin2
+some exact https://curiouscat.live/api/v2/post/likes?postid=934032&_ob=noregisterOrSignin2
 successful
 # maxrequests 1 # Disabled due to 500s
 
 # Test URLDecoded item names
 [user:eun%C3%A3otenhoisso]
 some exact https://curiouscat.live/eun%C3%A3otenhoisso
-some exact https://curiouscat.live/api/v2.1/profile?username=eun%C3%A3otenhoisso&_ob=registerOrSignin2
+some exact https://curiouscat.live/api/v2.1/profile?username=eun%C3%A3otenhoisso&_ob=noregisterOrSignin2
